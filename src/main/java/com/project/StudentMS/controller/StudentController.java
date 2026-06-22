@@ -6,11 +6,15 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.StudentMS.model.Student;
 import com.project.StudentMS.service.StudentService;
+
+import jakarta.validation.Valid;
+
 
 @RestController
 public class StudentController {
@@ -26,10 +30,14 @@ public class StudentController {
         return studentService.getStudents();
         
     }
+  
+
     @PostMapping("/student")
-    public Student addStudent(@RequestBody Student student) {
-    return studentService.addStudent(student);
-}
+    public Student addStudent(
+            @Valid @RequestBody Student student) {
+
+        return studentService.addStudent(student);
+    }
 
     @GetMapping("/student/{id}")
     public Student getStudentById(
@@ -45,5 +53,13 @@ public String deleteStudent(
     studentService.deleteStudent(id);
 
     return "Deleted";
+}
+
+@PutMapping("/student/{id}")
+public Student updateStudent(
+        @PathVariable int id,
+        @Valid @RequestBody Student student) {
+
+    return studentService.updateStudent(id, student);
 }
     }

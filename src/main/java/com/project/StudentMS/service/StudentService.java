@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.project.StudentMS.exception.StudentNotFoundException;
 import com.project.StudentMS.model.Student;
 import com.project.StudentMS.repository.StudentRepository;
 
@@ -49,12 +50,33 @@ public class StudentService {
 
 
     public Student getStudentById(int id) {
-    return studentRepository.findById(id).orElse(null);
 
-
+    return studentRepository
+            .findById(id)
+            .orElseThrow(() -> new StudentNotFoundException(
+                    "Student with id "
+                    + id
+                    + " not found"
+                )
+            );
 }
+
+
 
         public void deleteStudent(int id) {
     studentRepository.deleteById(id);
+}
+
+public Student updateStudent(int id, Student updatedStudent) {
+
+    Student existingStudent = studentRepository
+            .findById(id)
+            .orElseThrow(() ->
+                    new StudentNotFoundException(
+                            "Student with id " + id + " not found"));
+
+    existingStudent.setName(updatedStudent.getName());
+
+    return studentRepository.save(existingStudent);
 }
 }
